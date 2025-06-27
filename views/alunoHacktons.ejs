@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HackPortal - Dashboard Aluno</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+  /* Reset básico */
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0; 
+    padding: 0; 
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdf8f4;
+    overflow: hidden;
+  }
+
+  /* Navbar fixa lateral esquerda */
+  nav {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 320px;
+    height: 100vh;
+    background-color: white;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    border-right: 1px solid #eee;
+    padding: 20px;
+    overflow-y: auto; /* scroll interno caso necessário */
+    z-index: 10;
+  }
+
+  nav h1 {
+    color: #f57c00;
+    margin-bottom: 20px;
+  }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  nav ul li {
+    margin-bottom: 15px;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+
+  nav ul li a:hover {
+    background-color: #f57c00;
+    color: white;
+  }
+
+  /* Conteúdo principal */
+  main {
+    position: fixed;
+    top: 0;
+    left: 320px; /* largura da navbar */
+    width: calc(100vw - 320px);
+    height: 100vh;
+    padding: 20px 30px;
+    background-color: #fffaf5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Seções */
+  section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.07);
+    padding: 25px 30px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Em andamento */
+  .classe-andamento {
+    flex: 0 0 30%; /* 30% da altura do main */
+  }
+
+  .classe-andamento h2 {
+    color: #f57c00;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+  }
+
+  .andamento-lista {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px; /* adiciona espaçamento extra em cima */
+  }
+
+
+  /* Disponíveis */
+  .classe-disponivel {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* importante para o scroll funcionar */
+  }
+
+  .classe-disponivel h2 {
+    color: #f57c00;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+  }
+
+  .disponivel {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;       /* importante para scroll funcionar */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+  }
+
+  /* Scrollbars */
+  .disponivel::-webkit-scrollbar,
+  .andamento-lista::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .disponivel::-webkit-scrollbar-thumb,
+  .andamento-lista::-webkit-scrollbar-thumb {
+    background-color: #f57c00;
+    border-radius: 10px;
+  }
+
+  .disponivel::-webkit-scrollbar-track,
+  .andamento-lista::-webkit-scrollbar-track {
+    background-color: #fff3e0;
+  }
+
+  /* Cards Hackton */
+  .hackton {
+    border: 1px solid #f57c00;
+    border-radius: 12px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    flex: 0 0 70px;
+  }
+
+  .hackton:hover {
+    background-color: #fff3e0;
+  }
+
+  .hackton > div {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .hackton .nome {
+    flex: 2;
+    font-weight: 600;
+  }
+
+  .hackton .info {
+    flex: 3;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .hackton .acao {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .hackton .btn-participar {
+    background-color: #f57c00;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 6px 18px;
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+  }
+
+  .hackton .btn-participar:hover {
+    background-color: #e06b00;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    nav {
+      position: relative;
+      width: 100%;
+      height: auto;
+      box-shadow: none;
+      border-right: none;
+      padding: 15px 20px;
+    }
+
+    main {
+      position: relative;
+      margin-left: 0;
+      width: 100vw;
+      height: auto;
+      padding: 10px 15px;
+      overflow: visible;
+    }
+
+    .classe-andamento {
+      flex: none;
+      margin-bottom: 15px;
+      height: auto;
+    }
+
+    .classe-disponivel {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;       /* importante para permitir scroll no flex */
+      max-height: 70%;     /* limita altura para dar espaço para scroll */
+    }
+
+    .hackton {
+      flex-direction: column;
+      height: auto;
+      padding: 15px;
+      gap: 8px;
+      text-align: center;
+
+    }
+
+    .hackton > div {
+      flex: none;
+    }
+
+    .hackton .acao {
+      justify-content: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<%- include('navbar/navbarAluno.ejs') %>
+
+<main role="main">
+  <section class="classe-andamento" aria-label="Hacktons em andamento">
+    <h2>Em andamento</h2>
+    <div class="andamento-lista" role="list">
+      <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton em andamento: Nome do Hackton, Horário e endereço">
+        <div class="nome">Hackton Exemplo 1</div>
+        <div class="info">Horário e endereço</div>
+        <div class="acao">
+          <button class="btn-participar" type="button">Ver detalhes</button>
+        </div>
+      </div>
+      <!-- Mais hacktons em andamento aqui -->
+    </div>
+  </section>
+
+  <section class="classe-disponivel" aria-label="Hacktons disponíveis">
+    <h2>Disponíveis</h2>
+    <div class="disponivel" role="list">
+      <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: Nome do Hackton, Horário e endereço">
+        <div class="nome">NOME DO HACKTON</div>
+        <div class="info">HORÁRIO E ENDEREÇO</div>
+        <div class="acao">
+          <button class="btn-participar" type="button">Participar</button>
+        </div>
+      </div>
+      <!-- Mais hacktons disponíveis aqui (repetidos para teste de scroll) -->
+      <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: Nome do Hackton, Horário e endereço">
+        <div class="nome">NOME DO HACKTON</div>
+        <div class="info">HORÁRIO E ENDEREÇO</div>
+        <div class="acao">
+          <button class="btn-participar" type="button">Participar</button>
+        </div>
+      </div>
+      <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: Nome do Hackton, Horário e endereço">
+        <div class="nome">NOME DO HACKTON</div>
+        <div class="info">HORÁRIO E ENDEREÇO</div>
+        <div class="acao">
+          <button class="btn-participar" type="button">Participar</button>
+        </div>
+      </div>
+      <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: Nome do Hackton, Horário e endereço">
+        <div class="nome">NOME DO HACKTON</div>
+        <div class="info">HORÁRIO E ENDEREÇO</div>
+        <div class="acao">
+          <button class="btn-participar" type="button">Participar</button>
+        </div>
+      </div>
+      <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: Nome do Hackton, Horário e endereço">
+        <div class="nome">NOME DO HACKTON</div>
+        <div class="info">HORÁRIO E ENDEREÇO</div>
+        <div class="acao">
+          <button class="btn-participar" type="button">Participar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

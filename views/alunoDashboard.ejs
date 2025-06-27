@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Aluno</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fdf8f4;
+      color: #333;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      height: 100vh;
+      max-width: 900px;
+      margin: auto;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bem-vindo {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .card-custom {
+      background-color: #fff;
+      border-radius: 16px;
+      padding: 20px 25px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .card-custom:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-title {
+      color: #f57c00;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    /* Coins */
+    .coins-value {
+      font-size: 36px;
+      font-weight: bold;
+      color: #f57c00;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .coins-value i {
+      font-size: 36px;
+    }
+
+    .coins-desc {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    /* Histórico */
+    .historico {
+      flex-grow: 1; /* ocupa todo espaço restante */
+      margin-top: 20px;
+      background-color: #fffaf5;
+      border-radius: 16px;
+      padding: 15px 20px;
+      overflow-y: auto;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    .historico p {
+      margin-bottom: 10px;
+      padding: 10px 14px;
+      background-color: white;
+      border-left: 5px solid #f57c00;
+      border-radius: 6px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .historico::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .historico::-webkit-scrollbar-thumb {
+      background-color: #f57c00;
+      border-radius: 10px;
+    }
+
+    .historico::-webkit-scrollbar-track {
+      background-color: #f9ece0;
+    }
+  </style>
+</head>
+<body>
+  <%- include('navbar/navbarAluno.ejs') %>
+
+  <div class="container">
+    <h1 class="bem-vindo">Bem-vindo, <%= nome %>!</h1>
+
+    <!-- Coins -->
+    <div class="card-custom">
+      <h2 class="card-title">Coins</h2>
+      <div class="coins-value">
+        <i class="bi bi-coin"></i> <%= coins %>
+      </div>
+      <p class="coins-desc">Você pode trocar seus coins por projetos de extensão!</p>
+    </div>
+
+    <!-- Histórico -->
+    <div class="historico">
+      <h2 class="card-title">Histórico</h2>
+      <p>Registro 1</p>
+      <p>Registro 2</p>
+      <p>Registro 3</p>
+      <p>Registro 4</p>
+      <p>Registro 5</p>
+      <p>Registro 6</p>
+      <p>Registro 7</p>
+      <p>Registro 8</p>
+      <p>Registro 9</p>
+      <p>Registro 10</p>
+      <p>Registro 11</p>
+      <p>Registro 12</p>
+      <p>Registro 13</p>
+      <p>Registro 14</p>
+      <p>Registro 15</p>
+    </div>
+  </div>
+</body>
+</html>

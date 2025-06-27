@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hacktons Disponíveis</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background-color: #fffaf5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 320px;
+      height: 100vh;
+      background-color: #ffffff;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+      border-right: 1px solid #eee;
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    main {
+      position: fixed;
+      top: 0;
+      left: 320px;
+      width: calc(100vw - 320px);
+      height: 100vh;
+      padding: 30px 40px;
+      background-color: #fffaf5;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h2 {
+      color: #f57c00;
+      font-weight: 600;
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .dash {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .btn-laranja {
+      background-color: #f57c00;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-laranja:hover {
+      background-color: #e06b00;
+    }
+
+    .hacktons {
+      background-color: #ffffff;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      flex: 1 1 auto;
+      overflow-y: auto;
+    }
+
+    .hacktons p {
+      margin-bottom: 12px;
+      font-size: 16px;
+      color: #444;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        position: relative;
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+        border-right: none;
+      }
+
+      main {
+        position: relative;
+        margin-left: 0;
+        width: 100vw;
+        height: auto;
+        padding: 20px 15px;
+        overflow: visible;
+      }
+
+      .dash {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .btn-laranja {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('navbar/navbarProfessor.ejs') %>
+
+  <main role="main">
+    <div class="dash">
+      <h2>Hacktons Disponíveis</h2>
+      <button class="btn-laranja">Criar Hackton</button>
+    </div>
+
+    <div class="hacktons">
+      <p>Registro 1</p>
+      <p>Registro 2</p>
+      <p>Registro 3</p>
+      <p>Registro 4</p>
+      <p>Registro 5</p>
+      <p>Registro 6</p>
+      <p>Registro 7</p>
+      <p>Registro 8</p>
+      <p>Registro 9</p>
+      <p>Registro 10</p>
+      <p>Registro 11</p>
+      <p>Registro 12</p>
+    </div>
+  </main>
+
+</body>
+</html>
