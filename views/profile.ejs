@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfil e Alterar Senha</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fffaf5;
+      overflow: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 320px;
+      height: 100vh;
+      background-color: white;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+      border-right: 1px solid #eee;
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    main {
+      position: fixed;
+      top: 0;
+      left: 320px;
+      width: calc(100vw - 320px);
+      height: 100vh;
+      padding: 40px 50px;
+      background-color: #fffaf5;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h2 {
+      color: #f57c00;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    input[readonly] {
+      background-color: #f0f0f0;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .perfil-container {
+      background-color: #fff;
+      padding: 25px 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      margin-bottom: 30px;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 25px 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .btn-laranja {
+      background-color: #f57c00;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 10px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-laranja:hover {
+      background-color: #e06b00;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      main {
+        position: relative;
+        margin-left: 0;
+        width: 100vw;
+        height: auto;
+        padding: 20px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('navbar/navbarAluno.ejs') %>
+
+  <main>
+    <div class="perfil-container">
+      <h2>Perfil</h2>
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" id="nome" class="form-control" value="{nome}" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="matricula" class="form-label">Matrícula</label>
+        <input type="text" id="matricula" class="form-control" value="{matricula}" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="dataNascimento" class="form-label">Data de Nascimento</label>
+        <input type="date" id="dataNascimento" class="form-control" value="{dataNascimento}" readonly />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email Edu</label>
+        <input type="email" id="email" class="form-control" value="{email}" readonly />
+      </div>
+    </div>
+
+    <form>
+      <h2>Alterar Senha</h2>
+      <div class="mb-3">
+        <label for="senhaAtual" class="form-label">Senha Atual</label>
+        <input type="password" id="senhaAtual" class="form-control" placeholder="Digite sua senha atual" required />
+      </div>
+      <div class="mb-3">
+        <label for="novaSenha" class="form-label">Nova Senha</label>
+        <input type="password" id="novaSenha" class="form-control" placeholder="Digite a nova senha" required />
+      </div>
+      <div class="mb-3">
+        <label for="confirmaSenha" class="form-label">Confirmar Nova Senha</label>
+        <input type="password" id="confirmaSenha" class="form-control" placeholder="Confirme a nova senha" required />
+      </div>
+      <button type="submit" class="btn-laranja">Alterar Senha</button>
+    </form>
+  </main>
+
+</body>
+</html>

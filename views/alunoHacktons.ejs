@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HackPortal - Dashboard Aluno</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+  /* Reset básico */
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0; 
+    height: 100%;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdf8f4; /* cor original */
+    overflow: hidden;
+    color: #333;
+  }
+
+  /* Navbar fixa lateral esquerda */
+  nav {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 320px;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    border-right: 1px solid #e6e6e6;
+    padding: 30px 25px;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  nav h1 {
+    color: #ff6600;
+    margin-bottom: 30px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    font-size: 1.8rem;
+  }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  nav ul li {
+    margin-bottom: 20px;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    display: block;
+    padding: 12px 18px;
+    border-radius: 10px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    font-size: 1rem;
+  }
+
+  nav ul li a:hover,
+  nav ul li a.active {
+    background-color: #ff6600;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255,102,0,0.4);
+  }
+
+  /* Conteúdo principal */
+  main {
+    position: fixed;
+    top: 0;
+    left: 320px;
+    width: calc(100vw - 320px);
+    height: 100vh;
+    padding: 35px 40px;
+    background-color: #fdf8f4; /* cor original */
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Seções */
+  section {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    padding: 35px 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Títulos das seções */
+  section h2 {
+    color: #ff6600;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    letter-spacing: 0.04em;
+    border-bottom: 3px solid #ff6600;
+    padding-bottom: 8px;
+    max-width: max-content;
+  }
+
+  /* Listas */
+  .andamento-lista,
+  .disponivel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow-y: auto;
+    max-height: 350px;
+    padding-right: 8px;
+  }
+
+  /* Scrollbar estilizada */
+  .andamento-lista::-webkit-scrollbar,
+  .disponivel::-webkit-scrollbar {
+    width: 8px;
+  }
+  .andamento-lista::-webkit-scrollbar-thumb,
+  .disponivel::-webkit-scrollbar-thumb {
+    background-color: #ff6600;
+    border-radius: 10px;
+  }
+  .andamento-lista::-webkit-scrollbar-track,
+  .disponivel::-webkit-scrollbar-track {
+    background-color: #ffe6cc;
+  }
+
+  /* Cartões Hackton */
+  .hackton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.1);
+    background: linear-gradient(145deg, #fff, #ffe9d6);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+  .hackton:hover {
+    box-shadow: 0 12px 36px rgba(255, 102, 0, 0.25);
+    transform: translateY(-4px);
+  }
+
+  /* Nome do hackton */
+  .hackton .nome {
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: #cc4a00;
+    flex: 1.2;
+  }
+
+  /* Container infos */
+  .hackton .info-wrapper {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    color: #6a6a6a;
+    font-size: 0.95rem;
+    user-select: none;
+  }
+
+  /* Cada info com ícone */
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .info-item .icon {
+    color: #ff6600;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  /* Status com fundo colorido e arredondado */
+  .status {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    color: #fff;
+    width: fit-content;
+    user-select: none;
+    font-size: 0.9rem;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .status.disponivel {
+    background-color: #28a745; /* verde vivo */
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
+  }
+
+  .status.andamento {
+    background-color: #ffca28; /* amarelo */
+    color: #5d4037; /* texto escuro */
+    box-shadow: 0 0 8px rgba(255, 202, 40, 0.6);
+  }
+
+  .status.fechado {
+    background-color: #e53935; /* vermelho */
+    box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
+  }
+
+  /* Estilo botões */
+  .hackton .acao {
+    flex: 0 0 auto;
+  }
+
+  .hackton .btn-participar {
+    background-color: #ff6600;
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 10px 26px;
+    border-radius: 30px;
+    font-size: 1rem;
+    box-shadow: 0 6px 12px rgba(255,102,0,0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hackton .btn-participar:hover {
+    background-color: #e65c00;
+    box-shadow: 0 8px 16px rgba(230,92,0,0.5);
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    nav {
+      position: relative;
+      width: 100%;
+      height: auto;
+      box-shadow: none;
+      border-right: none;
+      padding: 20px 20px 15px;
+    }
+
+    main {
+      position: relative;
+      margin-left: 0;
+      width: 100vw;
+      height: auto;
+      padding: 20px 20px;
+      overflow: visible;
+    }
+
+    section {
+      padding: 25px 20px;
+    }
+
+    section h2 {
+      font-size: 1.5rem;
+    }
+
+    .andamento-lista,
+    .disponivel {
+      max-height: none;
+      padding-right: 0;
+    }
+
+    .hackton {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px 20px;
+      gap: 12px;
+    }
+
+    .hackton .acao {
+      align-self: stretch;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .hackton .btn-participar {
+      width: 100%;
+      padding: 12px 0;
+      font-size: 1.1rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<%- include('navbar/navbarAluno.ejs') %>
+
+<main role="main">
+  <section class="classe-andamento" aria-label="Hacktons em andamento">
+    <h2>Em andamento</h2>
+    <div class="andamento-lista" role="list">
+      <% emAndamento.forEach(h => { %>
+        <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton em andamento: <%= h.nome %>">
+          <div class="nome"><%= h.nome %></div>
+          <div class="info-wrapper">
+            <div class="info-item">
+              <span class="icon">📅</span>
+              <span>Período: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> – <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
+            </div>
+            <div class="info-item">
+              <span class="icon">📍</span>
+              <span>Local: <%= h.local %></span>
+            </div>
+            <div class="info-item">
+              <% 
+                const statusClass = 
+                  h.status.toLowerCase().includes('disponível') ? 'disponivel' :
+                  h.status.toLowerCase().includes('andamento') ? 'andamento' :
+                  h.status.toLowerCase().includes('fechado') ? 'fechado' :
+                  '';
+              %>
+              <span class="icon">⚡</span>
+              <span class="status <%= statusClass %>"><%= h.status %></span>
+            </div>
+          </div>
+          <div class="acao">
+            <button class="btn-participar" type="button">Ver detalhes</button>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="classe-disponivel" aria-label="Hacktons disponíveis">
+    <h2>Disponíveis</h2>
+    <div class="disponivel" role="list">
+      <% emAberto.forEach(h => { %>
+        <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: <%= h.nome %>">
+          <div class="nome"><%= h.nome %></div>
+          <div class="info-wrapper">
+            <div class="info-item">
+              <span class="icon">📅</span>
+              <span>Período: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> – <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
+            </div>
+            <div class="info-item">
+              <span class="icon">📍</span>
+              <span>Local: <%= h.local %></span>
+            </div>
+            <div class="info-item">
+              <% 
+                const statusClass = 
+                  h.status.toLowerCase().includes('disponível') ? 'disponivel' :
+                  h.status.toLowerCase().includes('andamento') ? 'andamento' :
+                  h.status.toLowerCase().includes('fechado') ? 'fechado' :
+                  '';
+              %>
+
+              <span class="icon">⚡</span>
+              <span class="status <%= statusClass %>"><%= h.status %></span>
+            </div>
+          </div>
+          <div class="acao">
+            <form action="/participar/<%= h.id_hackton %>" method="POST">
+              <button class="btn-participar" type="submit">Participar</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
