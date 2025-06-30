@@ -214,6 +214,11 @@
     box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
   }
 
+  .status.inscrito {
+    background-color: #17a2b8; /* azul claro */
+    box-shadow: 0 0 8px rgba(23, 162, 184, 0.6);
+  }
+
   /* Estilo botões */
   .hackton .acao {
     flex: 0 0 auto;
@@ -230,9 +235,13 @@
     box-shadow: 0 6px 12px rgba(255,102,0,0.3);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
-  .hackton .btn-participar:hover {
+  .hackton .btn-participar:hover:not(:disabled) {
     background-color: #e65c00;
     box-shadow: 0 8px 16px rgba(230,92,0,0.5);
+  }
+  .hackton .btn-participar:disabled {
+    background-color: #999;
+    cursor: not-allowed;
   }
 
   /* Responsividade */
@@ -296,73 +305,110 @@
 <%- include('navbar/navbarAluno.ejs') %>
 
 <main role="main">
+  <!-- Seção Hacktons em andamento (inclui inscritos e em andamento) -->
   <section class="classe-andamento" aria-label="Hacktons em andamento">
-    <h2>Em andamento</h2>
+    <h2>Inscrito</h2>
     <div class="andamento-lista" role="list">
+      <% if (emAndamento.length === 0) { %>
+        <p>Nenhum hackton em andamento ou inscrito no momento.</p>
+      <% } %>
       <% emAndamento.forEach(h => { %>
         <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton em andamento: <%= h.nome %>">
           <div class="nome"><%= h.nome %></div>
           <div class="info-wrapper">
             <div class="info-item">
-              <span class="icon">📅</span>
+              <span class="icon" aria-hidden="true">📅</span>
               <span>Período: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> – <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
             </div>
             <div class="info-item">
-              <span class="icon">📍</span>
+              <span class="icon" aria-hidden="true">📍</span>
               <span>Local: <%= h.local %></span>
             </div>
             <div class="info-item">
               <% 
-                const statusClass = 
-                  h.status.toLowerCase().includes('disponível') ? 'disponivel' :
-                  h.status.toLowerCase().includes('andamento') ? 'andamento' :
-                  h.status.toLowerCase().includes('fechado') ? 'fechado' :
-                  '';
+                let statusClass = '';
+                if(h.status.toLowerCase().includes('disponível')) statusClass = 'disponivel';
+                else if(h.status.toLowerCase().includes('andamento')) statusClass = 'andamento';
+                else if(h.status.toLowerCase().includes('fechado')) statusClass = 'fechado';
+                else if(h.status.toLowerCase().includes('inscrito')) statusClass = 'inscrito';
+                else statusClass = '';
               %>
-              <span class="icon">⚡</span>
+              <span class="icon" aria-hidden="true">⚡</span>
               <span class="status <%= statusClass %>"><%= h.status %></span>
             </div>
           </div>
           <div class="acao">
-            <button class="btn-participar" type="button">Ver detalhes</button>
+            <% if (h.fotoEnviada) { %>
+              <button class="btn-participar" type="button" disabled>Foto Enviada</button>
+              <button 
+                class="btn-participar" 
+                type="button" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modalEnviarFoto" 
+                onclick="abrirModalEnviarFoto('<%= h.id_hackton %>')"
+                style="margin-left: 10px;"
+              >
+                Editar Foto
+              </button>
+            <% } else { %>
+              <button 
+                class="btn-participar" 
+                type="button" 
+                data-bs-toggle="modal" 
+                data-bs-target="#modalEnviarFoto" 
+                onclick="abrirModalEnviarFoto('<%= h.id_hackton %>')"
+              >
+                Ver detalhes
+              </button>
+            <% } %>
           </div>
         </div>
       <% }) %>
     </div>
   </section>
 
+  <!-- Seção Hacktons disponíveis para participar -->
   <section class="classe-disponivel" aria-label="Hacktons disponíveis">
     <h2>Disponíveis</h2>
     <div class="disponivel" role="list">
+      <% if (emAberto.length === 0) { %>
+        <p>Não há hacktons disponíveis para participar no momento.</p>
+      <% } %>
       <% emAberto.forEach(h => { %>
         <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: <%= h.nome %>">
           <div class="nome"><%= h.nome %></div>
           <div class="info-wrapper">
             <div class="info-item">
-              <span class="icon">📅</span>
+              <span class="icon" aria-hidden="true">📅</span>
               <span>Período: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> – <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
             </div>
             <div class="info-item">
-              <span class="icon">📍</span>
+              <span class="icon" aria-hidden="true">📍</span>
               <span>Local: <%= h.local %></span>
             </div>
             <div class="info-item">
               <% 
-                const statusClass = 
-                  h.status.toLowerCase().includes('disponível') ? 'disponivel' :
-                  h.status.toLowerCase().includes('andamento') ? 'andamento' :
-                  h.status.toLowerCase().includes('fechado') ? 'fechado' :
-                  '';
-              %>
+                // Status será "Inscrito" se o aluno já está inscrito nesse hackton (campo h.inscrito == true)
+                let statusTexto = 'Em Aberto';
+                let statusClass = 'disponivel';
 
-              <span class="icon">⚡</span>
-              <span class="status <%= statusClass %>"><%= h.status %></span>
+                if (h.inscrito) {
+                  statusTexto = 'Inscrito';
+                  statusClass = 'inscrito';
+                }
+              %>
+              <span class="icon" aria-hidden="true">⚡</span>
+              <span class="status <%= statusClass %>"><%= statusTexto %></span>
             </div>
           </div>
           <div class="acao">
-            <form action="/participar/<%= h.id_hackton %>" method="POST">
-              <button class="btn-participar" type="submit">Participar</button>
-            </form>
+            <% if (h.inscrito) { %>
+              <button class="btn-participar" type="button" disabled>Inscrito</button>
+            <% } else { %>
+              <form action="/participar/<%= h.id_hackton %>" method="POST" style="margin:0;">
+                <button class="btn-participar" type="submit">Participar</button>
+              </form>
+            <% } %>
           </div>
         </div>
       <% }) %>
@@ -370,5 +416,65 @@
   </section>
 </main>
 
+<div class="modal fade" id="modalEnviarFoto" tabindex="-1" aria-labelledby="modalEnviarFotoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" action="/enviar-foto" method="POST" enctype="multipart/form-data">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEnviarFotoLabel">Enviar Foto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="id_hackton" id="inputIdHackton" />
+        <div class="mb-3">
+          <label for="foto" class="form-label">Escolha uma imagem</label>
+          <input class="form-control" type="file" name="foto" id="foto" accept="image/*" required />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Enviar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function abrirModalEnviarFoto(idHackton) {
+    const inputIdHackton = document.getElementById('inputIdHackton');
+    inputIdHackton.value = idHackton;
+    const modal = new bootstrap.Modal(document.getElementById('modalEnviarFoto'));
+    modal.show();
+
+    // Remove event listener anterior para evitar múltiplos listeners
+    const form = document.querySelector('#modalEnviarFoto form');
+    form.onsubmit = async function(event) {
+      event.preventDefault();
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: formData,
+        });
+
+        if (response.ok) {
+          // Fechar modal
+          const modalEl = document.getElementById('modalEnviarFoto');
+          const bsModal = bootstrap.Modal.getInstance(modalEl);
+          bsModal.hide();
+
+          // Atualizar a página para refletir a nova foto enviada
+          window.location.reload();
+        } else {
+          alert('Erro ao enviar a foto. Tente novamente.');
+        }
+      } catch (error) {
+        alert('Erro ao enviar a foto. Tente novamente.');
+        console.error(error);
+      }
+    };
+  }
+</script>
 </body>
 </html>

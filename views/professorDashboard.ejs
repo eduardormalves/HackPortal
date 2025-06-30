@@ -3,121 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hacktons Disponíveis</title>
+  <title>Hacktons - Professor</title>
   <style>
     * {
       box-sizing: border-box;
     }
-
-    html, body {
+    body, html {
       margin: 0;
       height: 100%;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background-color: #fffaf5;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #222;
       overflow: hidden;
     }
-
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 320px;
       height: 100vh;
-      background-color: #ffffff;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-      border-right: 1px solid #eee;
+      background: #fff;
+      border-right: 1px solid #ddd;
       padding: 20px;
       overflow-y: auto;
+      box-shadow: 1px 0 5px rgba(0,0,0,0.1);
       z-index: 10;
     }
-
     main {
       position: fixed;
-      top: 0;
-      left: 320px;
+      top: 0; left: 320px;
       width: calc(100vw - 320px);
       height: 100vh;
       padding: 30px 40px;
-      background-color: #fffaf5;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
+      gap: 40px;
+      background-color: #fffaf5;
     }
-
-    h2 {
-      color: #f57c00;
-      font-weight: 600;
-      font-size: 24px;
-      margin: 0;
-    }
-
-    .dash {
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
-
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #f57c00;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
     .btn-laranja {
       background-color: #f57c00;
       border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
       color: white;
       font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 12px;
       font-size: 14px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
-
     .btn-laranja:hover {
       background-color: #e06b00;
     }
-
-    .hacktons {
-      background-color: #ffffff;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-      flex: 1 1 auto;
+    section {
+      background: #fff;
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      max-height: 350px;
       overflow-y: auto;
     }
-
-    .hacktons p {
-      margin-bottom: 12px;
-      font-size: 16px;
-      color: #444;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 8px;
+    section h2 {
+      margin: 0 0 15px 0;
+      font-size: 20px;
+      font-weight: 600;
+      color: #f57c00;
+      border-bottom: 2px solid #f57c00;
+      padding-bottom: 6px;
     }
-
+    ul.hackton-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    ul.hackton-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      color: #333;
+    }
+    ul.hackton-list li:last-child {
+      border-bottom: none;
+    }
+    .hackton-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .hackton-nome {
+      font-weight: 600;
+      font-size: 16px;
+      color: #222;
+    }
+    .hackton-datas {
+      font-size: 13px;
+      color: #666;
+      margin-top: 2px;
+    }
+    .hackton-status {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f57c00;
+      white-space: nowrap;
+      min-width: 100px;
+      text-align: right;
+    }
+    .empty-message {
+      color: #999;
+      font-style: italic;
+      font-size: 14px;
+      padding: 15px 0;
+      text-align: center;
+    }
+    /* Scrollbar minimalista */
+    section::-webkit-scrollbar {
+      width: 6px;
+    }
+    section::-webkit-scrollbar-track {
+      background: #f3e9d3;
+      border-radius: 3px;
+    }
+    section::-webkit-scrollbar-thumb {
+      background: #f57c00;
+      border-radius: 3px;
+    }
     @media (max-width: 768px) {
       nav {
         position: relative;
         width: 100%;
         height: auto;
-        box-shadow: none;
         border-right: none;
+        box-shadow: none;
       }
-
       main {
         position: relative;
-        margin-left: 0;
+        left: 0;
         width: 100vw;
         height: auto;
         padding: 20px 15px;
+        gap: 25px;
         overflow: visible;
       }
-
-      .dash {
+      .header {
         flex-direction: column;
-        gap: 10px;
         align-items: flex-start;
+        gap: 10px;
       }
-
       .btn-laranja {
         width: 100%;
-        text-align: center;
+        font-size: 16px;
+        padding: 12px;
+      }
+      section {
+        max-height: none;
+      }
+      ul.hackton-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+      .hackton-status {
+        min-width: auto;
+        text-align: left;
       }
     }
   </style>
@@ -127,25 +188,69 @@
   <%- include('navbar/navbarProfessor.ejs') %>
 
   <main role="main">
-    <div class="dash">
-      <h2>Hacktons Disponíveis</h2>
+    <div class="header">
+      <h1>Hacktons</h1>
       <a href="/pcadastroh"><button class="btn-laranja">Criar Hackton</button></a>
     </div>
 
-    <div class="hacktons">
-      <p>Registro 1</p>
-      <p>Registro 2</p>
-      <p>Registro 3</p>
-      <p>Registro 4</p>
-      <p>Registro 5</p>
-      <p>Registro 6</p>
-      <p>Registro 7</p>
-      <p>Registro 8</p>
-      <p>Registro 9</p>
-      <p>Registro 10</p>
-      <p>Registro 11</p>
-      <p>Registro 12</p>
-    </div>
+    <section>
+      <h2>Disponíveis (Em Aberto)</h2>
+      <% if (!emAberto || emAberto.length === 0) { %>
+        <p class="empty-message">Nenhum hackton disponível no momento.</p>
+      <% } else { %>
+        <ul class="hackton-list">
+          <% emAberto.forEach(h => { %>
+            <li>
+              <div class="hackton-info">
+                <span class="hackton-nome"><%= h.nome %></span>
+                <span class="hackton-datas">Início: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %></span>
+              </div>
+              <span class="hackton-status"><%= h.status %></span>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </section>
+
+    <section>
+      <h2>Em Andamento</h2>
+      <% if (!emAndamento || emAndamento.length === 0) { %>
+        <p class="empty-message">Não há hacktons em andamento.</p>
+      <% } else { %>
+        <ul class="hackton-list">
+          <% emAndamento.forEach(h => { %>
+            <li>
+              <div class="hackton-info">
+                <span class="hackton-nome"><%= h.nome %></span>
+                <span class="hackton-datas">
+                  De <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> até <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %>
+                </span>
+              </div>
+              <span class="hackton-status"><%= h.status %></span>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </section>
+
+    <section>
+      <h2>Encerrados</h2>
+      <% if (!encerrados || encerrados.length === 0) { %>
+        <p class="empty-message">Sem hacktons encerrados.</p>
+      <% } else { %>
+        <ul class="hackton-list">
+          <% encerrados.forEach(h => { %>
+            <li>
+              <div class="hackton-info">
+                <span class="hackton-nome"><%= h.nome %></span>
+                <span class="hackton-datas">Finalizado em <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
+              </div>
+              <span class="hackton-status"><%= h.status %></span>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </section>
   </main>
 
 </body>

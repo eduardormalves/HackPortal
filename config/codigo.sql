@@ -41,3 +41,14 @@ CREATE TABLE participacao (
     FOREIGN KEY (aluno_id) REFERENCES aluno(ID_aluno),
     FOREIGN KEY (hackton_id) REFERENCES hackton(id_hackton)
 );
+
+CREATE TABLE foto (
+  id_foto INT NOT NULL AUTO_INCREMENT,
+  aluno_id INT NOT NULL,
+  caminho VARCHAR(255) NOT NULL,
+  data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  hackton_id INT DEFAULT NULL,
+  PRIMARY KEY (id_foto),
+  KEY aluno_id (aluno_id),
+  KEY hackton_id (hackton_id)
+);

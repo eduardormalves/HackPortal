@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Validação de Fotos - Professor</title>
+  <style>
+    /* Reset básico e fonte */
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fffaf5;
+      margin: 0; padding: 0;
+      color: #222;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .container {
+      margin-left: 320px;
+      padding: 40px 30px 30px;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    h1 {
+      color: #f57c00;
+      margin-bottom: 30px;
+    }
+    section {
+      border-radius: 12px;
+      padding: 25px 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      margin-bottom: 40px;
+      background-color: white;
+    }
+    section h2 {
+      margin-top: 0;
+      border-bottom: 2px solid #f57c00;
+      padding-bottom: 8px;
+      color: #f57c00;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    th {
+      background: #fff5e6;
+      color: #bf6200;
+      font-weight: 600;
+    }
+    tr:hover {
+      background-color: #fff2cc;
+    }
+    button {
+      background-color: #f57c00;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 8px;
+      transition: background-color 0.25s ease;
+    }
+    button.reject-btn {
+      background-color: #cc3f00;
+    }
+    button:hover {
+      background-color: #e06b00;
+    }
+    button.reject-btn:hover {
+      background-color: #b23100;
+    }
+    button.finalize-btn {
+      background-color: #28a745;
+    }
+    button.finalize-btn:hover {
+      background-color: #218838;
+    }
+    #modalFoto {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    #modalFoto img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+    #modalFoto .close-btn {
+      position: absolute;
+      top: 25px; right: 40px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('navbar/navbarProfessor.ejs') %>
+
+  <div class="container">
+    <h1>Validação de Fotos</h1>
+
+    <% if ((!hacktonsPendentes || hacktonsPendentes.length === 0) && (!hacktonsFinalizados || hacktonsFinalizados.length === 0)) { %>
+      <p>Não há hacktons para validar ou finalizados.</p>
+    <% } else { %>
+
+      <!-- Seção Hacktons com Fotos Pendentes -->
+      <section>
+  <h2>Hacktons com Fotos Pendentes</h2>
+  <% if (!hacktonsPendentes || hacktonsPendentes.length === 0) { %>
+    <p>Não há hacktons com fotos pendentes para validação.</p>
+  <% } else { %>
+    <% hacktonsPendentes.forEach(hackton => { %>
+      <section style="margin-bottom: 30px;">
+        <h3><%= hackton.nome %></h3>
+
+        <% if (!hackton.participantes || hackton.participantes.length === 0) { %>
+          <p>Nenhum aluno enviou fotos para validação neste hackton.</p>
+        <% } else { %>
+          <table>
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Email</th>
+                <th>Data de Envio</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% hackton.participantes.forEach(p => { %>
+                <tr>
+                  <td><%= p.nome_aluno %></td>
+                  <td><%= p.email_edu %></td>
+                  <td><%= new Date(p.data_envio).toLocaleString('pt-BR') %></td>
+                  <td>
+                    <button class="view-btn" data-foto="<%= p.caminho %>">Visualizar Foto</button>
+                    <form action="/rejeitar-foto" method="POST" style="display:inline;">
+                      <input type="hidden" name="id_foto" value="<%= p.id_foto %>">
+                      <input type="hidden" name="id_aluno" value="<%= p.id_aluno %>">
+                      <button type="submit" class="reject-btn" onclick="return confirm('Tem certeza que deseja rejeitar esta foto e descontar 1 coin do aluno?')">
+                        Rejeitar Foto
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+
+        <!-- Botão para encerrar hackton sempre visível -->
+        <form action="/finalizar-hackton/<%= hackton.id_hackton %>" method="POST" style="margin-top:16px;">
+          <button type="submit" class="finalize-btn">Encerrar Hackton</button>
+        </form>
+      </section>
+    <% }) %>
+  <% } %>
+</section>
+
+      <!-- Seção Hacktons Finalizados -->
+      <section>
+        <h2>Hacktons Finalizados</h2>
+        <% if (!hacktonsFinalizados || hacktonsFinalizados.length === 0) { %>
+          <p>Não há hacktons finalizados.</p>
+        <% } else { %>
+          <% hacktonsFinalizados.forEach(hackton => { %>
+            <section style="margin-bottom: 30px;">
+              <h3><%= hackton.nome %></h3>
+              <p>Este hackton foi encerrado.</p>
+              <% if (hackton.participantes && hackton.participantes.length > 0) { %>
+                <ul>
+                  <% hackton.participantes.forEach(p => { %>
+                    <li><%= p.nome_aluno %> (<%= p.email_edu %>)</li>
+                  <% }) %>
+                </ul>
+              <% } else { %>
+                <p>Nenhum participante registrado.</p>
+              <% } %>
+            </section>
+          <% }) %>
+        <% } %>
+      </section>
+
+    <% } %>
+  </div>
+
+  <div id="modalFoto" onclick="fecharModal()">
+    <span class="close-btn" onclick="fecharModal(event)">&times;</span>
+    <img src="" alt="Foto do Aluno" />
+  </div>
+
+  <script>
+    const modal = document.getElementById('modalFoto');
+    const modalImg = modal.querySelector('img');
+
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const fotoPath = btn.getAttribute('data-foto');
+        modalImg.src = '/uploads/' + fotoPath;
+        modal.style.display = 'flex';
+      });
+    });
+
+    function fecharModal(e) {
+      if(e) e.stopPropagation();
+      modal.style.display = 'none';
+      modalImg.src = '';
+    }
+  </script>
+
+</body>
+</html>

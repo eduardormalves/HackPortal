@@ -129,23 +129,14 @@
 
     <!-- Histórico -->
     <div class="historico">
-      <h2 class="card-title">Histórico</h2>
-      <p>Registro 1</p>
-      <p>Registro 2</p>
-      <p>Registro 3</p>
-      <p>Registro 4</p>
-      <p>Registro 5</p>
-      <p>Registro 6</p>
-      <p>Registro 7</p>
-      <p>Registro 8</p>
-      <p>Registro 9</p>
-      <p>Registro 10</p>
-      <p>Registro 11</p>
-      <p>Registro 12</p>
-      <p>Registro 13</p>
-      <p>Registro 14</p>
-      <p>Registro 15</p>
-    </div>
+    <h2 class="card-title">Histórico</h2>
+    <% if (!hacktonsHistorico || hacktonsHistorico.length === 0) { %>
+      <p>Você ainda não enviou fotos para nenhum hackton.</p>
+    <% } else { %>
+      <% hacktonsHistorico.forEach(h => { %>
+        <p><%= h.nome %> - Foto enviada em <%= new Date(h.data_envio).toLocaleDateString('pt-BR') %></p>
+      <% }) %>
+    <% } %>
   </div>
 </body>
 </html>
