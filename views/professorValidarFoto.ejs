@@ -23,65 +23,160 @@
     }
     h1 {
       color: #f57c00;
-      margin-bottom: 30px;
+      margin-bottom: 50px; /* Aumentado espaçamento para melhor separação */
+      font-weight: 700;
+      font-size: 2.2rem;
     }
     section {
-      border-radius: 12px;
-      padding: 25px 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       margin-bottom: 40px;
-      background-color: white;
     }
     section h2 {
-      margin-top: 0;
-      border-bottom: 2px solid #f57c00;
-      padding-bottom: 8px;
       color: #f57c00;
+      font-weight: 700;
+      font-size: 1.8rem;
+      border-bottom: 3px solid #f57c00;
+      padding-bottom: 8px;
+      margin-bottom: 24px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 16px;
+
+    /* Container dos cards de hacktons */
+    .hackton-cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
     }
-    th, td {
-      padding: 12px 15px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
+
+    /* Card hackton */
+    .hackton-card {
+      background-color: #fff;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(245, 124, 0, 0.15);
+      padding: 25px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-    th {
-      background: #fff5e6;
+
+    .hackton-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hackton-header h3 {
       color: #bf6200;
+      font-weight: 700;
+      font-size: 1.6rem;
+      margin: 0;
+      flex: 1 1 auto;
+      min-width: 180px;
+    }
+
+    .hackton-date {
+      color: #f57c00;
       font-weight: 600;
+      font-size: 1rem;
+      white-space: nowrap;
+      flex: 0 0 auto;
     }
-    tr:hover {
-      background-color: #fff2cc;
-    }
-    button {
-      background-color: #f57c00;
+
+    .hackton-header form button.finalize-btn {
+      background-color: #28a745;
+      color: #fff;
+      padding: 8px 22px;
+      border-radius: 8px;
       border: none;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: background-color 0.25s ease;
+    }
+    .hackton-header form button.finalize-btn:hover {
+      background-color: #218838;
+    }
+
+    /* Lista de participantes */
+    .participantes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .participante-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fffaf5;
+      padding: 12px 18px;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .participante-info {
+      flex: 1 1 250px;
+      color: #444;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .participante-actions {
+      flex: 0 0 auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .participante-actions button {
+      background-color: #f57c00;
       color: white;
-      padding: 8px 16px;
+      border: none;
+      padding: 7px 16px;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
-      margin-right: 8px;
       transition: background-color 0.25s ease;
+      font-size: 0.9rem;
+      user-select: none;
     }
-    button.reject-btn {
-      background-color: #cc3f00;
-    }
-    button:hover {
+    .participante-actions button:hover {
       background-color: #e06b00;
     }
-    button.reject-btn:hover {
+    .participante-actions button.reject-btn {
+      background-color: #cc3f00;
+    }
+    .participante-actions button.reject-btn:hover {
       background-color: #b23100;
     }
-    button.finalize-btn {
-      background-color: #28a745;
+
+    /* Scrollbar personalizada */
+    .participantes-list::-webkit-scrollbar {
+      width: 8px;
     }
-    button.finalize-btn:hover {
-      background-color: #218838;
+    .participantes-list::-webkit-scrollbar-track {
+      background: #f3e9d3;
+      border-radius: 4px;
     }
+    .participantes-list::-webkit-scrollbar-thumb {
+      background: #f57c00;
+      border-radius: 4px;
+    }
+
+    /* Mensagem quando não há participantes */
+    .no-participantes {
+      font-style: italic;
+      color: #999;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+
+    /* Modal da foto */
     #modalFoto {
       display: none;
       position: fixed;
@@ -109,99 +204,96 @@
   </style>
 </head>
 <body>
-
   <%- include('navbar/navbarProfessor.ejs') %>
 
   <div class="container">
-    <h1>Validação de Fotos</h1>
 
-    <% if ((!hacktonsPendentes || hacktonsPendentes.length === 0) && (!hacktonsFinalizados || hacktonsFinalizados.length === 0)) { %>
+    <% if (!hacktonsPendentes.length && !hacktonsFinalizados.length) { %>
       <p>Não há hacktons para validar ou finalizados.</p>
-    <% } else { %>
-
-      <!-- Seção Hacktons com Fotos Pendentes -->
-      <section>
-  <h2>Hacktons com Fotos Pendentes</h2>
-  <% if (!hacktonsPendentes || hacktonsPendentes.length === 0) { %>
-    <p>Não há hacktons com fotos pendentes para validação.</p>
-  <% } else { %>
-    <% hacktonsPendentes.forEach(hackton => { %>
-      <section style="margin-bottom: 30px;">
-        <h3><%= hackton.nome %></h3>
-
-        <% if (!hackton.participantes || hackton.participantes.length === 0) { %>
-          <p>Nenhum aluno enviou fotos para validação neste hackton.</p>
-        <% } else { %>
-          <table>
-            <thead>
-              <tr>
-                <th>Aluno</th>
-                <th>Email</th>
-                <th>Data de Envio</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% hackton.participantes.forEach(p => { %>
-                <tr>
-                  <td><%= p.nome_aluno %></td>
-                  <td><%= p.email_edu %></td>
-                  <td><%= new Date(p.data_envio).toLocaleString('pt-BR') %></td>
-                  <td>
-                    <button class="view-btn" data-foto="<%= p.caminho %>">Visualizar Foto</button>
-                    <form action="/rejeitar-foto" method="POST" style="display:inline;">
-                      <input type="hidden" name="id_foto" value="<%= p.id_foto %>">
-                      <input type="hidden" name="id_aluno" value="<%= p.id_aluno %>">
-                      <button type="submit" class="reject-btn" onclick="return confirm('Tem certeza que deseja rejeitar esta foto e descontar 1 coin do aluno?')">
-                        Rejeitar Foto
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              <% }) %>
-            </tbody>
-          </table>
-        <% } %>
-
-        <!-- Botão para encerrar hackton sempre visível -->
-        <form action="/finalizar-hackton/<%= hackton.id_hackton %>" method="POST" style="margin-top:16px;">
-          <button type="submit" class="finalize-btn">Encerrar Hackton</button>
-        </form>
-      </section>
-    <% }) %>
-  <% } %>
-</section>
-
-      <!-- Seção Hacktons Finalizados -->
-      <section>
-        <h2>Hacktons Finalizados</h2>
-        <% if (!hacktonsFinalizados || hacktonsFinalizados.length === 0) { %>
-          <p>Não há hacktons finalizados.</p>
-        <% } else { %>
-          <% hacktonsFinalizados.forEach(hackton => { %>
-            <section style="margin-bottom: 30px;">
-              <h3><%= hackton.nome %></h3>
-              <p>Este hackton foi encerrado.</p>
-              <% if (hackton.participantes && hackton.participantes.length > 0) { %>
-                <ul>
-                  <% hackton.participantes.forEach(p => { %>
-                    <li><%= p.nome_aluno %> (<%= p.email_edu %>)</li>
-                  <% }) %>
-                </ul>
-              <% } else { %>
-                <p>Nenhum participante registrado.</p>
-              <% } %>
-            </section>
-          <% }) %>
-        <% } %>
-      </section>
-
     <% } %>
+
+    <section>
+      <h2>Hacktons Encerrados para Validação</h2>
+      <% if (!hacktonsPendentes.length) { %>
+        <p>Não há hacktons para validar.</p>
+      <% } else { %>
+        <div class="hackton-cards-container">
+          <% hacktonsPendentes.forEach(hackton => { %>
+            <div class="hackton-card">
+              <div class="hackton-header">
+                <h3><%= hackton.nome %></h3>
+                <span class="hackton-date">Encerrado: <%= new Date(hackton.data_fim).toLocaleDateString('pt-BR') %></span>
+                <form action="/finalizar-hackton/<%= hackton.id_hackton %>" method="POST">
+                  <button type="submit" class="finalize-btn">Fechar</button>
+                </form>
+              </div>
+
+              <% if (!hackton.participantes || hackton.participantes.length === 0) { %>
+                <p class="no-participantes">Nenhum aluno enviou fotos para validação neste hackton.</p>
+              <% } else { %>
+                <div class="participantes-list">
+                  <% hackton.participantes.forEach(participante => { %>
+                    <div class="participante-item">
+                      <div class="participante-info">
+                        <strong><%= participante.nome_aluno %></strong><br />
+                        <span><%= participante.email_edu %></span><br />
+                        <small>Enviado em: <%= new Date(participante.data_envio).toLocaleDateString('pt-BR') %></small>
+                      </div>
+                      <div class="participante-actions">
+                        <button class="view-btn" data-foto="<%= participante.caminho %>">Visualizar Foto</button>
+                        <form action="/rejeitar-foto" method="POST" style="display:inline;">
+                          <input type="hidden" name="id_foto" value="<%= participante.id_foto %>">
+                          <input type="hidden" name="id_aluno" value="<%= participante.id_aluno %>">
+                          <button type="submit" class="reject-btn">Rejeitar Foto</button>
+                        </form>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </section>
+
+    <section>
+      <h2>Hacktons Finalizados</h2>
+      <% if (!hacktonsFinalizados.length) { %>
+        <p>Não há hacktons finalizados.</p>
+      <% } else { %>
+        <div class="hackton-cards-container">
+          <% hacktonsFinalizados.forEach(hackton => { %>
+            <div class="hackton-card">
+              <div class="hackton-header">
+                <h3><%= hackton.nome %></h3>
+                <span class="hackton-date">Finalizado em: <%= new Date(hackton.data_fim).toLocaleDateString('pt-BR') %></span>
+              </div>
+              <p>Este hackton foi encerrado e finalizado.</p>
+              <% if (hackton.participantes && hackton.participantes.length > 0) { %>
+                <div class="participantes-list">
+                  <% hackton.participantes.forEach(participante => { %>
+                    <div class="participante-item">
+                      <div class="participante-info">
+                        <strong><%= participante.nome_aluno %></strong><br />
+                        <span><%= participante.email_edu %></span>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              <% } else { %>
+                <p class="no-participantes">Nenhum participante registrado.</p>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </section>
   </div>
 
-  <div id="modalFoto" onclick="fecharModal()">
-    <span class="close-btn" onclick="fecharModal(event)">&times;</span>
-    <img src="" alt="Foto do Aluno" />
+  <div id="modalFoto">
+    <span class="close-btn" onclick="fecharModal()">×</span>
+    <img src="" alt="Foto do aluno" />
   </div>
 
   <script>
@@ -212,7 +304,7 @@
       btn.addEventListener('click', e => {
         e.stopPropagation();
         const fotoPath = btn.getAttribute('data-foto');
-        modalImg.src = '/uploads/' + fotoPath;
+        modalImg.src = '/Uploads/' + fotoPath;
         modal.style.display = 'flex';
       });
     });
@@ -223,6 +315,5 @@
       modalImg.src = '';
     }
   </script>
-
 </body>
 </html>

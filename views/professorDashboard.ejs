@@ -9,93 +9,113 @@
       box-sizing: border-box;
     }
     body, html {
-      margin: 0;
-      height: 100%;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #fffaf5;
-      color: #222;
-      overflow: hidden;
-    }
-    nav {
-      position: fixed;
-      top: 0; left: 0;
-      width: 320px;
-      height: 100vh;
-      background: #fff;
-      border-right: 1px solid #ddd;
-      padding: 20px;
-      overflow-y: auto;
-      box-shadow: 1px 0 5px rgba(0,0,0,0.1);
-      z-index: 10;
-    }
-    main {
-      position: fixed;
-      top: 0; left: 320px;
-      width: calc(100vw - 320px);
-      height: 100vh;
-      padding: 30px 40px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      background-color: #fffaf5;
-    }
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fffaf5;
+    color: #222;
+    overflow-y: auto;
+    overflow-x: hidden; /* evita rolagem horizontal */
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 320px;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 1px 0 5px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+
+  main {
+    margin-left: 320px;
+    width: calc(100vw - 320px); /* controla a largura para não ultrapassar */
+    padding: 40px 50px 60px;
+    background-color: #fffaf5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    overflow-y: auto;
+  }
+
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
     .header h1 {
       margin: 0;
-      font-size: 28px;
+      font-size: 36px;
       color: #f57c00;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      text-shadow: 0 1px 3px rgba(245,124,0,0.35);
     }
     .btn-laranja {
       background-color: #f57c00;
       border: none;
-      padding: 10px 24px;
-      border-radius: 6px;
+      padding: 14px 32px;
+      border-radius: 12px;
       color: white;
-      font-weight: 600;
-      font-size: 14px;
+      font-weight: 700;
+      font-size: 17px;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 20px rgba(245,124,0,0.38);
     }
     .btn-laranja:hover {
       background-color: #e06b00;
+      box-shadow: 0 8px 26px rgba(224,107,0,0.58);
     }
     section {
       background: #fff;
-      padding: 20px 25px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      max-height: 350px;
-      overflow-y: auto;
+      padding: 35px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(245,124,0,0.15);
+      min-height: 420px; /* Aumentei a altura mínima */
+      display: flex;
+      flex-direction: column;
+    }
+    section:hover {
+      box-shadow: 0 12px 42px rgba(245,124,0,0.25);
     }
     section h2 {
-      margin: 0 0 15px 0;
-      font-size: 20px;
-      font-weight: 600;
+      margin: 0 0 25px 0;
+      font-size: 24px;
+      font-weight: 700;
       color: #f57c00;
-      border-bottom: 2px solid #f57c00;
-      padding-bottom: 6px;
+      border-bottom: 3px solid #f57c00;
+      padding-bottom: 10px;
+      letter-spacing: 0.07em;
+      user-select: none;
     }
     ul.hackton-list {
       list-style: none;
       padding: 0;
       margin: 0;
+      overflow-y: auto;
+      flex-grow: 1; /* Faz a lista crescer para ocupar o espaço */
     }
     ul.hackton-list li {
-      padding: 12px 0;
-      border-bottom: 1px solid #eee;
+      padding: 18px 0;
+      border-bottom: 1.8px solid #f3e9d3;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 15px;
+      font-size: 16.5px;
       color: #333;
+      border-radius: 10px;
+      transition: background-color 0.25s ease;
+    }
+    ul.hackton-list li:hover {
+      background-color: #fff3e0;
+      cursor: pointer;
     }
     ul.hackton-list li:last-child {
       border-bottom: none;
@@ -103,44 +123,71 @@
     .hackton-info {
       display: flex;
       flex-direction: column;
+      gap: 5px;
+      max-width: 78%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .hackton-nome {
-      font-weight: 600;
-      font-size: 16px;
+      font-weight: 700;
+      font-size: 19px;
       color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .hackton-datas {
-      font-size: 13px;
+      font-size: 14.5px;
       color: #666;
-      margin-top: 2px;
+      font-style: italic;
+      user-select: none;
+      white-space: nowrap;
     }
     .hackton-status {
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 14.5px;
+      font-weight: 700;
       color: #f57c00;
       white-space: nowrap;
-      min-width: 100px;
-      text-align: right;
+      min-width: 120px;
+      text-align: center;
+      padding: 7px 16px;
+      border-radius: 24px;
+      border: 1.8px solid #f57c00;
+      background-color: #fff3e0;
+      user-select: none;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .hackton-status:hover {
+      background-color: #f57c00;
+      color: white;
     }
     .empty-message {
       color: #999;
       font-style: italic;
-      font-size: 14px;
-      padding: 15px 0;
+      font-size: 16px;
+      padding: 50px 0;
       text-align: center;
+      user-select: none;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     /* Scrollbar minimalista */
-    section::-webkit-scrollbar {
-      width: 6px;
+    section ul::-webkit-scrollbar {
+      width: 9px;
     }
-    section::-webkit-scrollbar-track {
+    section ul::-webkit-scrollbar-track {
       background: #f3e9d3;
-      border-radius: 3px;
+      border-radius: 5px;
     }
-    section::-webkit-scrollbar-thumb {
+    section ul::-webkit-scrollbar-thumb {
       background: #f57c00;
-      border-radius: 3px;
+      border-radius: 5px;
     }
+    /* Responsivo */
     @media (max-width: 768px) {
       nav {
         position: relative;
@@ -150,35 +197,41 @@
         box-shadow: none;
       }
       main {
-        position: relative;
-        left: 0;
-        width: 100vw;
-        height: auto;
-        padding: 20px 15px;
-        gap: 25px;
-        overflow: visible;
+        margin-left: 0;
+        padding: 30px 20px 50px;
+        gap: 40px;
       }
       .header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 16px;
       }
       .btn-laranja {
         width: 100%;
-        font-size: 16px;
-        padding: 12px;
+        font-size: 18px;
+        padding: 15px;
+        border-radius: 14px;
       }
       section {
-        max-height: none;
+        min-height: auto;
+        padding: 30px 25px;
       }
       ul.hackton-list li {
         flex-direction: column;
         align-items: flex-start;
-        gap: 5px;
+        gap: 8px;
       }
       .hackton-status {
         min-width: auto;
         text-align: left;
+        padding: 6px 14px;
+        font-size: 15px;
+      }
+      .hackton-info {
+        max-width: 100%;
+      }
+      .hackton-datas {
+        white-space: normal;
       }
     }
   </style>
@@ -187,23 +240,25 @@
 
   <%- include('navbar/navbarProfessor.ejs') %>
 
-  <main role="main">
+  <main role="main" aria-label="Lista de hacktons do professor">
     <div class="header">
       <h1>Hacktons</h1>
-      <a href="/pcadastroh"><button class="btn-laranja">Criar Hackton</button></a>
+      <a href="/pcadastroh"><button class="btn-laranja" aria-label="Criar novo Hackton">Criar Hackton</button></a>
     </div>
 
-    <section>
-      <h2>Disponíveis (Em Aberto)</h2>
+    <section aria-labelledby="abertos-title">
+      <h2 id="abertos-title">Disponíveis (Em Aberto)</h2>
       <% if (!emAberto || emAberto.length === 0) { %>
         <p class="empty-message">Nenhum hackton disponível no momento.</p>
       <% } else { %>
-        <ul class="hackton-list">
+        <ul class="hackton-list" role="list">
           <% emAberto.forEach(h => { %>
-            <li>
+            <li role="listitem" tabindex="0" aria-label="Hackton <%= h.nome %>, status <%= h.status %>">
               <div class="hackton-info">
-                <span class="hackton-nome"><%= h.nome %></span>
-                <span class="hackton-datas">Início: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %></span>
+                <span class="hackton-nome" title="<%= h.nome %>"><%= h.nome %></span>
+                <span class="hackton-datas" aria-label="Data de início: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %>">
+                  Início: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %>
+                </span>
               </div>
               <span class="hackton-status"><%= h.status %></span>
             </li>
@@ -212,17 +267,17 @@
       <% } %>
     </section>
 
-    <section>
-      <h2>Em Andamento</h2>
+    <section aria-labelledby="andamento-title">
+      <h2 id="andamento-title">Em Andamento</h2>
       <% if (!emAndamento || emAndamento.length === 0) { %>
         <p class="empty-message">Não há hacktons em andamento.</p>
       <% } else { %>
-        <ul class="hackton-list">
+        <ul class="hackton-list" role="list">
           <% emAndamento.forEach(h => { %>
-            <li>
+            <li role="listitem" tabindex="0" aria-label="Hackton <%= h.nome %>, status <%= h.status %>">
               <div class="hackton-info">
-                <span class="hackton-nome"><%= h.nome %></span>
-                <span class="hackton-datas">
+                <span class="hackton-nome" title="<%= h.nome %>"><%= h.nome %></span>
+                <span class="hackton-datas" aria-label="Período do hackton">
                   De <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> até <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %>
                 </span>
               </div>
@@ -233,17 +288,19 @@
       <% } %>
     </section>
 
-    <section>
-      <h2>Encerrados</h2>
+    <section aria-labelledby="encerrados-title">
+      <h2 id="encerrados-title">Encerrados</h2>
       <% if (!encerrados || encerrados.length === 0) { %>
         <p class="empty-message">Sem hacktons encerrados.</p>
       <% } else { %>
-        <ul class="hackton-list">
+        <ul class="hackton-list" role="list">
           <% encerrados.forEach(h => { %>
-            <li>
+            <li role="listitem" tabindex="0" aria-label="Hackton <%= h.nome %>, status <%= h.status %>">
               <div class="hackton-info">
-                <span class="hackton-nome"><%= h.nome %></span>
-                <span class="hackton-datas">Finalizado em <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
+                <span class="hackton-nome" title="<%= h.nome %>"><%= h.nome %></span>
+                <span class="hackton-datas" aria-label="Data de finalização">
+                  Finalizado em <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %>
+                </span>
               </div>
               <span class="hackton-status"><%= h.status %></span>
             </li>

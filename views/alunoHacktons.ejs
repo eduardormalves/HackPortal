@@ -1,480 +1,277 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>HackPortal - Dashboard Aluno</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
-<style>
-  /* Reset básico */
-  * {
-    box-sizing: border-box;
-  }
-
-  html, body {
-    margin: 0;
-    padding: 0; 
-    height: 100%;
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fdf8f4; /* cor original */
-    overflow: hidden;
-    color: #333;
-  }
-
-  /* Navbar fixa lateral esquerda */
-  nav {
-    position: fixed;
-    top: 0; 
-    left: 0;
-    width: 320px;
-    height: 100vh;
-    background-color: #fff;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    border-right: 1px solid #e6e6e6;
-    padding: 30px 25px;
-    overflow-y: auto;
-    z-index: 10;
-  }
-
-  nav h1 {
-    color: #ff6600;
-    margin-bottom: 30px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    font-size: 1.8rem;
-  }
-
-  nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  nav ul li {
-    margin-bottom: 20px;
-  }
-
-  nav ul li a {
-    text-decoration: none;
-    color: #555;
-    font-weight: 600;
-    display: block;
-    padding: 12px 18px;
-    border-radius: 10px;
-    transition: background-color 0.25s ease, color 0.25s ease;
-    font-size: 1rem;
-  }
-
-  nav ul li a:hover,
-  nav ul li a.active {
-    background-color: #ff6600;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(255,102,0,0.4);
-  }
-
-  /* Conteúdo principal */
-  main {
-    position: fixed;
-    top: 0;
-    left: 320px;
-    width: calc(100vw - 320px);
-    height: 100vh;
-    padding: 35px 40px;
-    background-color: #fdf8f4; /* cor original */
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
-
-  /* Seções */
-  section {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-    padding: 35px 40px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Títulos das seções */
-  section h2 {
-    color: #ff6600;
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    letter-spacing: 0.04em;
-    border-bottom: 3px solid #ff6600;
-    padding-bottom: 8px;
-    max-width: max-content;
-  }
-
-  /* Listas */
-  .andamento-lista,
-  .disponivel {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    overflow-y: auto;
-    max-height: 350px;
-    padding-right: 8px;
-  }
-
-  /* Scrollbar estilizada */
-  .andamento-lista::-webkit-scrollbar,
-  .disponivel::-webkit-scrollbar {
-    width: 8px;
-  }
-  .andamento-lista::-webkit-scrollbar-thumb,
-  .disponivel::-webkit-scrollbar-thumb {
-    background-color: #ff6600;
-    border-radius: 10px;
-  }
-  .andamento-lista::-webkit-scrollbar-track,
-  .disponivel::-webkit-scrollbar-track {
-    background-color: #ffe6cc;
-  }
-
-  /* Cartões Hackton */
-  .hackton {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 22px 30px;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.1);
-    background: linear-gradient(145deg, #fff, #ffe9d6);
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
-  }
-  .hackton:hover {
-    box-shadow: 0 12px 36px rgba(255, 102, 0, 0.25);
-    transform: translateY(-4px);
-  }
-
-  /* Nome do hackton */
-  .hackton .nome {
-    font-weight: 800;
-    font-size: 1.4rem;
-    color: #cc4a00;
-    flex: 1.2;
-  }
-
-  /* Container infos */
-  .hackton .info-wrapper {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 8px;
-    color: #6a6a6a;
-    font-size: 0.95rem;
-    user-select: none;
-  }
-
-  /* Cada info com ícone */
-  .info-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .info-item .icon {
-    color: #ff6600;
-    font-weight: 700;
-    font-size: 1.2rem;
-  }
-
-  /* Status com fundo colorido e arredondado */
-  .status {
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-weight: 700;
-    color: #fff;
-    width: fit-content;
-    user-select: none;
-    font-size: 0.9rem;
-    transition: box-shadow 0.3s ease;
-  }
-
-  .status.disponivel {
-    background-color: #28a745; /* verde vivo */
-    box-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
-  }
-
-  .status.andamento {
-    background-color: #ffca28; /* amarelo */
-    color: #5d4037; /* texto escuro */
-    box-shadow: 0 0 8px rgba(255, 202, 40, 0.6);
-  }
-
-  .status.fechado {
-    background-color: #e53935; /* vermelho */
-    box-shadow: 0 0 8px rgba(229, 57, 53, 0.6);
-  }
-
-  .status.inscrito {
-    background-color: #17a2b8; /* azul claro */
-    box-shadow: 0 0 8px rgba(23, 162, 184, 0.6);
-  }
-
-  /* Estilo botões */
-  .hackton .acao {
-    flex: 0 0 auto;
-  }
-
-  .hackton .btn-participar {
-    background-color: #ff6600;
-    border: none;
-    color: white;
-    font-weight: 700;
-    padding: 10px 26px;
-    border-radius: 30px;
-    font-size: 1rem;
-    box-shadow: 0 6px 12px rgba(255,102,0,0.3);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  .hackton .btn-participar:hover:not(:disabled) {
-    background-color: #e65c00;
-    box-shadow: 0 8px 16px rgba(230,92,0,0.5);
-  }
-  .hackton .btn-participar:disabled {
-    background-color: #999;
-    cursor: not-allowed;
-  }
-
-  /* Responsividade */
-  @media (max-width: 768px) {
-    nav {
-      position: relative;
-      width: 100%;
-      height: auto;
-      box-shadow: none;
-      border-right: none;
-      padding: 20px 20px 15px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hacktons - Aluno</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fffaf5;
+      color: #222;
+      height: 100vh;
+      overflow: hidden;
     }
-
-    main {
-      position: relative;
-      margin-left: 0;
-      width: 100vw;
-      height: auto;
-      padding: 20px 20px;
-      overflow: visible;
+    .container {
+      margin-left: 320px;
+      padding: 40px;
+      height: 100vh;
+      overflow-y: auto;
     }
-
+    h1 {
+      font-size: 32px;
+      color: #f57c00;
+      margin-bottom: 20px;
+    }
     section {
-      padding: 25px 20px;
+      margin-bottom: 40px;
     }
-
     section h2 {
-      font-size: 1.5rem;
+      font-size: 24px;
+      color: #f57c00;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #ffd8b0;
+      padding-bottom: 8px;
     }
-
-    .andamento-lista,
-    .disponivel {
-      max-height: none;
-      padding-right: 0;
+    .hackton-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+      border-left: 5px solid #f57c00;
     }
-
-    .hackton {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 18px 20px;
-      gap: 12px;
+    .hackton-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
     }
-
-    .hackton .acao {
-      align-self: stretch;
+    .hackton-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .hackton-info p {
       display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+    }
+    .status {
+      font-weight: bold;
+      color: #f57c00;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    button, .btn {
+      background-color: #f57c00;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover, .btn:hover {
+      background-color: #e06b00;
+    }
+    button:disabled {
+      background-color: #ddd;
+      color: #555;
+      cursor: not-allowed;
+    }
+    .modal, #modalFoto {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+    .modal-content h3 {
+      margin-top: 0;
+      color: #f57c00;
+    }
+    .modal-content input[type="file"] {
+      width: 100%;
+      margin: 15px 0;
+    }
+    .modal-content .buttons {
+      display: flex;
+      gap: 10px;
       justify-content: flex-end;
-      width: 100%;
     }
-
-    .hackton .btn-participar {
-      width: 100%;
-      padding: 12px 0;
-      font-size: 1.1rem;
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
     }
-  }
-</style>
+    #modalFoto img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+    #modalFoto .close-btn {
+      position: absolute;
+      top: 25px;
+      right: 40px;
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
+  <%- include('navbar/navbarAluno.ejs') %>
+  <div class="container">
 
-<%- include('navbar/navbarAluno.ejs') %>
+    <% function formatarData(dataStr) { const d = new Date(dataStr); return (`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`); } %>
 
-<main role="main">
-  <!-- Seção Hacktons em andamento (inclui inscritos e em andamento) -->
-  <section class="classe-andamento" aria-label="Hacktons em andamento">
-    <h2>Inscrito</h2>
-    <div class="andamento-lista" role="list">
-      <% if (emAndamento.length === 0) { %>
-        <p>Nenhum hackton em andamento ou inscrito no momento.</p>
+    <section>
+      <h2>Inscrito</h2>
+      <% if (!emAndamento.length && !inscritosEmAberto.length) { %>
+        <p>Você ainda não está inscrito em nenhum hackton.</p>
       <% } %>
-      <% emAndamento.forEach(h => { %>
-        <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton em andamento: <%= h.nome %>">
-          <div class="nome"><%= h.nome %></div>
-          <div class="info-wrapper">
-            <div class="info-item">
-              <span class="icon" aria-hidden="true">📅</span>
-              <span>Período: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> – <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
-            </div>
-            <div class="info-item">
-              <span class="icon" aria-hidden="true">📍</span>
-              <span>Local: <%= h.local %></span>
-            </div>
-            <div class="info-item">
-              <% 
-                let statusClass = '';
-                if(h.status.toLowerCase().includes('disponível')) statusClass = 'disponivel';
-                else if(h.status.toLowerCase().includes('andamento')) statusClass = 'andamento';
-                else if(h.status.toLowerCase().includes('fechado')) statusClass = 'fechado';
-                else if(h.status.toLowerCase().includes('inscrito')) statusClass = 'inscrito';
-                else statusClass = '';
-              %>
-              <span class="icon" aria-hidden="true">⚡</span>
-              <span class="status <%= statusClass %>"><%= h.status %></span>
-            </div>
+      <% emAndamento.concat(inscritosEmAberto).forEach(h => { %>
+        <div class="hackton-card">
+          <div class="hackton-info">
+            <p>🏷️ <strong>Nome:</strong> <%= h.nome %></p>
+            <p>📍 <strong>Local:</strong> <%= h.local %></p>
+            <p>🗓 <strong>Período:</strong> <%= formatarData(h.data_inicio) %> – <%= formatarData(h.data_fim) %></p>
+            <p>📌 <strong>Status:</strong> <span class="status"><%= h.statusExibido %></span></p>
           </div>
-          <div class="acao">
-            <% if (h.fotoEnviada) { %>
-              <button class="btn-participar" type="button" disabled>Foto Enviada</button>
-              <button 
-                class="btn-participar" 
-                type="button" 
-                data-bs-toggle="modal" 
-                data-bs-target="#modalEnviarFoto" 
-                onclick="abrirModalEnviarFoto('<%= h.id_hackton %>')"
-                style="margin-left: 10px;"
-              >
-                Editar Foto
-              </button>
+          <div class="actions">
+            <% if (h.fotoEnviada && h.status !== 'Fechado' && (h.statusExibido === 'Em Andamento' || h.statusExibido === 'Finalizado')) { %>
+              <button class="view-btn" data-hackton-id="<%= h.id_hackton %>">📷 Ver Foto</button>
+              <button class="open-modal" data-hackton-id="<%= h.id_hackton %>">✏️ Editar Foto</button>
+            <% } else if (h.fotoEnviada && h.status === 'Fechado') { %>
+              <button class="view-btn" data-hackton-id="<%= h.id_hackton %>">📷 Ver Foto</button>
+            <% } else if (h.status !== 'Fechado' && (h.statusExibido === 'Em Andamento' || h.statusExibido === 'Finalizado')) { %>
+              <button class="open-modal" data-hackton-id="<%= h.id_hackton %>">📤 Enviar Foto</button>
             <% } else { %>
-              <button 
-                class="btn-participar" 
-                type="button" 
-                data-bs-toggle="modal" 
-                data-bs-target="#modalEnviarFoto" 
-                onclick="abrirModalEnviarFoto('<%= h.id_hackton %>')"
-              >
-                Ver detalhes
-              </button>
+              <button disabled>🚫 Nenhuma Foto Enviada</button>
             <% } %>
           </div>
         </div>
       <% }) %>
-    </div>
-  </section>
+    </section>
 
-  <!-- Seção Hacktons disponíveis para participar -->
-  <section class="classe-disponivel" aria-label="Hacktons disponíveis">
-    <h2>Disponíveis</h2>
-    <div class="disponivel" role="list">
-      <% if (emAberto.length === 0) { %>
+    <section>
+      <h2>Disponíveis</h2>
+      <% if (!emAberto.length) { %>
         <p>Não há hacktons disponíveis para participar no momento.</p>
+      <% } else { %>
+        <% emAberto.forEach(h => { %>
+          <div class="hackton-card">
+            <div class="hackton-info">
+              <p>🏷️ <strong>Nome:</strong> <%= h.nome %></p>
+              <p>📍 <strong>Local:</strong> <%= h.local %></p>
+              <p>🗓 <strong>Período:</strong> <%= formatarData(h.data_inicio) %> – <%= formatarData(h.data_fim) %></p>
+              <p>📌 <strong>Status:</strong> <span class="status"><%= h.statusExibido %></span></p>
+            </div>
+            <div class="actions">
+              <% if (h.inscrito) { %>
+                <button disabled>✅ Inscrito</button>
+              <% } else { %>
+                <form action="/participar/<%= h.id_hackton %>" method="POST">
+                  <button type="submit">➕ Participar</button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
       <% } %>
-      <% emAberto.forEach(h => { %>
-        <div class="hackton" role="listitem" tabindex="0" aria-label="Hackton disponível: <%= h.nome %>">
-          <div class="nome"><%= h.nome %></div>
-          <div class="info-wrapper">
-            <div class="info-item">
-              <span class="icon" aria-hidden="true">📅</span>
-              <span>Período: <%= new Date(h.data_inicio).toLocaleDateString('pt-BR') %> – <%= new Date(h.data_fim).toLocaleDateString('pt-BR') %></span>
-            </div>
-            <div class="info-item">
-              <span class="icon" aria-hidden="true">📍</span>
-              <span>Local: <%= h.local %></span>
-            </div>
-            <div class="info-item">
-              <% 
-                // Status será "Inscrito" se o aluno já está inscrito nesse hackton (campo h.inscrito == true)
-                let statusTexto = 'Em Aberto';
-                let statusClass = 'disponivel';
+    </section>
 
-                if (h.inscrito) {
-                  statusTexto = 'Inscrito';
-                  statusClass = 'inscrito';
-                }
-              %>
-              <span class="icon" aria-hidden="true">⚡</span>
-              <span class="status <%= statusClass %>"><%= statusTexto %></span>
-            </div>
+    <!-- Modal Foto Upload -->
+    <div class="modal" id="uploadModal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">×</span>
+        <h3>Enviar Foto</h3>
+        <form id="uploadForm" action="/enviar-foto" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="id_hackton" id="hacktonId">
+          <input type="file" name="foto" accept="image/*" required>
+          <div class="buttons">
+            <button type="submit">Enviar</button>
+            <button type="button" onclick="closeModal()">Cancelar</button>
           </div>
-          <div class="acao">
-            <% if (h.inscrito) { %>
-              <button class="btn-participar" type="button" disabled>Inscrito</button>
-            <% } else { %>
-              <form action="/participar/<%= h.id_hackton %>" method="POST" style="margin:0;">
-                <button class="btn-participar" type="submit">Participar</button>
-              </form>
-            <% } %>
-          </div>
-        </div>
-      <% }) %>
+        </form>
+      </div>
     </div>
-  </section>
-</main>
 
-<div class="modal fade" id="modalEnviarFoto" tabindex="-1" aria-labelledby="modalEnviarFotoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <form class="modal-content" action="/enviar-foto" method="POST" enctype="multipart/form-data">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalEnviarFotoLabel">Enviar Foto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="id_hackton" id="inputIdHackton" />
-        <div class="mb-3">
-          <label for="foto" class="form-label">Escolha uma imagem</label>
-          <input class="form-control" type="file" name="foto" id="foto" accept="image/*" required />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Enviar</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
+    <!-- Modal Visualiza Foto -->
+    <div id="modalFoto">
+      <span class="close-btn" onclick="fecharModalFoto()">×</span>
+      <img src="">
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  function abrirModalEnviarFoto(idHackton) {
-    const inputIdHackton = document.getElementById('inputIdHackton');
-    inputIdHackton.value = idHackton;
-    const modal = new bootstrap.Modal(document.getElementById('modalEnviarFoto'));
-    modal.show();
+    <script>
+      const uploadModal = document.getElementById('uploadModal');
+      const hacktonIdInput = document.getElementById('hacktonId');
+      const modalFoto = document.getElementById('modalFoto');
+      const modalImg = modalFoto.querySelector('img');
 
-    // Remove event listener anterior para evitar múltiplos listeners
-    const form = document.querySelector('#modalEnviarFoto form');
-    form.onsubmit = async function(event) {
-      event.preventDefault();
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch(form.action, {
-          method: form.method,
-          body: formData,
+      document.querySelectorAll('.open-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+          hacktonIdInput.value = btn.getAttribute('data-hackton-id');
+          uploadModal.style.display = 'flex';
         });
+      });
 
-        if (response.ok) {
-          // Fechar modal
-          const modalEl = document.getElementById('modalEnviarFoto');
-          const bsModal = bootstrap.Modal.getInstance(modalEl);
-          bsModal.hide();
-
-          // Atualizar a página para refletir a nova foto enviada
-          window.location.reload();
-        } else {
-          alert('Erro ao enviar a foto. Tente novamente.');
-        }
-      } catch (error) {
-        alert('Erro ao enviar a foto. Tente novamente.');
-        console.error(error);
+      function closeModal() {
+        uploadModal.style.display = 'none';
+        hacktonIdInput.value = '';
       }
-    };
-  }
-</script>
+
+      document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const hacktonId = btn.getAttribute('data-hackton-id');
+          try {
+            const response = await fetch(`/get-foto/${hacktonId}`);
+            const data = await response.json();
+            if (data.caminho) {
+              modalImg.src = '/Uploads/' + data.caminho;
+              modalFoto.style.display = 'flex';
+            } else {
+              alert('Nenhuma foto encontrada para este hackton.');
+            }
+          } catch (error) {
+            console.error('Erro ao buscar foto:', error);
+            alert('Erro ao carregar a foto.');
+          }
+        });
+      });
+
+      function fecharModalFoto() {
+        modalFoto.style.display = 'none';
+        modalImg.src = '';
+      }
+    </script>
+  </div>
 </body>
 </html>

@@ -3,154 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Perfil e Alterar Senha</title>
+  <title>Perfil</title>
   <style>
     * {
       box-sizing: border-box;
     }
-
-    html, body {
-      margin: 0;
-      height: 100%;
+    body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #fffaf5;
+      background: #fffaf5;
+      margin: 0;
+      padding: 0;
+      color: #222;
+      height: 100vh;
       overflow: hidden;
     }
-
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 320px;
+    .container {
+      margin-left: 320px;
+      padding: 40px 40px 30px;
       height: 100vh;
-      background-color: white;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-      border-right: 1px solid #eee;
-      padding: 20px;
-      overflow-y: auto;
-      z-index: 10;
-    }
-
-    main {
-      position: fixed;
-      top: 0;
-      left: 320px;
-      width: calc(100vw - 320px);
-      height: 100vh;
-      padding: 40px 50px;
-      background-color: #fffaf5;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
+      gap: 40px;
+      max-width: 700px;
     }
-
-    h2 {
+    h1 {
       color: #f57c00;
-      font-size: 24px;
-      font-weight: 600;
       margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 2.8rem;
+      letter-spacing: 1.1px;
     }
-
-    .form-label {
-      font-weight: 500;
+    section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 30px 35px;
+      box-shadow: 0 5px 18px rgba(245,124,0,0.15);
+      transition: box-shadow 0.3s ease;
     }
-
-    input[readonly] {
-      background-color: #f0f0f0;
-      color: #666;
-      cursor: not-allowed;
+    section:hover {
+      box-shadow: 0 8px 30px rgba(245,124,0,0.25);
     }
-
-    .perfil-container {
-      background-color: #fff;
-      padding: 25px 30px;
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-      margin-bottom: 30px;
+    section h2 {
+      margin-top: 0;
+      border-bottom: 3px solid #f57c00;
+      padding-bottom: 10px;
+      color: #f57c00;
+      font-weight: 700;
+      font-size: 1.9rem;
+      margin-bottom: 28px;
     }
-
+    .info p {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 19px;
+      margin: 14px 0;
+      color: #444;
+      line-height: 1.3;
+    }
+    .info svg {
+      width: 28px;
+      height: 28px;
+      fill: #f57c00;
+      flex-shrink: 0;
+    }
     form {
-      background-color: #fff;
-      padding: 25px 30px;
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 450px;
+      margin-top: 5px;
     }
-
-    .btn-laranja {
+    label {
+      font-weight: 600;
+      color: #f57c00;
+      font-size: 17px;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      font-size: 17px;
+      transition: border-color 0.3s ease;
+    }
+    input[type="password"]:focus {
+      border-color: #f57c00;
+      outline: none;
+      box-shadow: 0 0 10px rgba(245,124,0,0.3);
+    }
+    button {
       background-color: #f57c00;
       border: none;
       color: white;
-      font-weight: 600;
-      padding: 10px 24px;
+      padding: 14px 26px;
       border-radius: 12px;
-      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
+      font-size: 17px;
+      letter-spacing: 0.04em;
+      align-self: flex-start;
       transition: background-color 0.3s ease;
+      box-shadow: 0 3px 8px rgba(245,124,0,0.4);
     }
-
-    .btn-laranja:hover {
+    button:hover {
       background-color: #e06b00;
+      box-shadow: 0 5px 15px rgba(224,107,0,0.6);
     }
-
-    @media (max-width: 768px) {
-      nav {
-        position: relative;
-        width: 100%;
-        height: auto;
-      }
-
-      main {
-        position: relative;
-        margin-left: 0;
-        width: 100vw;
-        height: auto;
-        padding: 20px 15px;
-      }
+    .error {
+      color: #d32f2f;
+      font-size: 15px;
+      margin: 10px 0 0 0;
+    }
+    .success {
+      color: #388e3c;
+      font-size: 15px;
+      margin: 10px 0 0 0;
     }
   </style>
+  <script>
+    function formatarData(data) {
+      if (!data) return '';
+      const d = new Date(data);
+      return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()}`;
+    }
+  </script>
 </head>
 <body>
+  <% if (perfil === 'aluno') { %>
+    <%- include('navbar/navbarAluno.ejs') %>
+  <% } else if (perfil === 'professor') { %>
+    <%- include('navbar/navbarProfessor.ejs') %>
+  <% } %>
 
-  <%- include('navbar/navbarAluno.ejs') %>
+  <div class="container">
 
-  <main>
-    <div class="perfil-container">
-      <h2>Perfil</h2>
-      <div class="mb-3">
-        <label for="nome" class="form-label">Nome</label>
-        <input type="text" id="nome" class="form-control" value="{nome}" readonly />
-      </div>
-      <div class="mb-3">
-        <label for="matricula" class="form-label">Matrícula</label>
-        <input type="text" id="matricula" class="form-control" value="{matricula}" readonly />
-      </div>
-      <div class="mb-3">
-        <label for="dataNascimento" class="form-label">Data de Nascimento</label>
-        <input type="date" id="dataNascimento" class="form-control" value="{dataNascimento}" readonly />
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Email Edu</label>
-        <input type="email" id="email" class="form-control" value="{email}" readonly />
-      </div>
-    </div>
+    <section class="info">
+      <h2>Informações do Perfil</h2>
+      <p>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        Nome: <%= nome %>
+      </p>
+      <p>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 17h20v2H2zm1.15-4.05L4 11.47 5.76 12l2.14-5h1.84l2.14 5 1.76-.53 1.15 1.47L14 12l-.76-2h-4.48L8 12H3.15zm9.85-1L13.76 10h-3.52L11 12h1.15z"/></svg>
+        Matrícula: <%= matricula %>
+      </p>
+      <p>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 4h-1V3c0-.55-.45-1-1-1s-1 .45-1 1v1H8V3c0-.55-.45-1-1-1s-1 .45-1 1v1H5c-1.11 0-2 .89-2 2v14c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+        Data de Nascimento: <script>document.write(formatarData('<%= nascimento %>'))</script>
+      </p>
+      <p>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Email Edu: <%= email_edu %>
+      </p>
+      <% if (perfil === 'aluno') { %>
+        <p>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20h16v2H4v-2zm8-18C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-5h-2v-2h2v2zm0-4h-2V6h2v5z"/></svg>
+          Curso: <%= curso %>
+        </p>
+      <% } %>
+    </section>
 
-    <form>
+    <section>
       <h2>Alterar Senha</h2>
-      <div class="mb-3">
-        <label for="senhaAtual" class="form-label">Senha Atual</label>
-        <input type="password" id="senhaAtual" class="form-control" placeholder="Digite sua senha atual" required />
-      </div>
-      <div class="mb-3">
-        <label for="novaSenha" class="form-label">Nova Senha</label>
-        <input type="password" id="novaSenha" class="form-control" placeholder="Digite a nova senha" required />
-      </div>
-      <div class="mb-3">
-        <label for="confirmaSenha" class="form-label">Confirmar Nova Senha</label>
-        <input type="password" id="confirmaSenha" class="form-control" placeholder="Confirme a nova senha" required />
-      </div>
-      <button type="submit" class="btn-laranja">Alterar Senha</button>
-    </form>
-  </main>
+      <% if (error) { %>
+        <p class="error"><%= error %></p>
+      <% } %>
+      <% if (success) { %>
+        <p class="success"><%= success %></p>
+      <% } %>
+      <form action="/alterar-senha" method="POST" novalidate>
+        <label for="senha_atual">Senha Atual</label>
+        <input type="password" id="senha_atual" name="senha_atual" required />
 
+        <label for="nova_senha">Nova Senha</label>
+        <input type="password" id="nova_senha" name="nova_senha" required />
+
+        <label for="confirmar_nova_senha">Confirmar Nova Senha</label>
+        <input type="password" id="confirmar_nova_senha" name="confirmar_nova_senha" required />
+
+        <button type="submit">Alterar Senha</button>
+      </form>
+    </section>
+  </div>
 </body>
 </html>
